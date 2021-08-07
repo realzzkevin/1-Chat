@@ -1,0 +1,24 @@
+{
+  "name": "1chat",
+  "version": "1.0.0",
+  "description": "project 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/realzzkevin/1-Chat.git"
+  },
+  "author": "Kevin, Nish , Sandy , Diamond",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/realzzkevin/1-Chat/issues"
+  },
+  "homepage": "https://github.com/realzzkevin/1-Chat#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.13.5",
+    "socket.io": "^4.1.3"
+  }
+}
