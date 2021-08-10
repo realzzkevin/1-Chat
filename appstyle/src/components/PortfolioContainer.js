@@ -3,7 +3,7 @@ import NavTabs from './NavTabs';
 import Home from './pages/Portfolio';
 import Chat from './pages/Chat';
 import Resume from './pages/Resume';
-import Contact from './pages/Contact';
+import Signup from './pages/Signup';
 // import Footer from '../Footer';
 
 export default function PortfolioContainer() {
@@ -21,7 +21,7 @@ export default function PortfolioContainer() {
     if (currentPage === 'Resume') {
       return <Resume />;
     }
-    return <Contact />;
+    return <Signup />;
   };
 
   const handlePageChange = (page) => setCurrentPage(page);
