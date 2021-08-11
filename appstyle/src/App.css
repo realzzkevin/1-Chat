@@ -65,16 +65,31 @@
     }
     
     /* The popup chat - hidden by default */
-    .chat-popup {
-      display: none;
+    .popup {
       position: fixed;
-      bottom: 0;
-      right: 15px;
-      border: 3px solid #f1f1f1;
-      z-index: 9;
-      color: rgb(79, 7, 97)
+      max-width: 300%;
+        right: 15px;
+      background-color: rgb(79, 7,
+       97);
+       display: flex;
+       justify-content: center;
+       align-items: center;
     }
-    
+
+    .popup-inner {
+      position:relative;
+      padding: 32px;
+      width: 100%;
+      max-width: 640px;
+      background-color: #FFF;
+
+    }
+    .popup-inner .close-btn{
+      position:absolute;
+      top: 16px;
+      right: 16px;
+      
+    }
     /* Add styles to the form container */
     .form-container {
       max-width: 300px;
@@ -130,4 +145,43 @@
 background-color: #f1f1f1;
 max-width: 800px;
 
+    }
+
+    .popup-box {
+      position: fixed;
+      background: #00000050;
+      width: 100%;
+      height: 100vh;
+      top: 0;
+      left: 0;
+    }
+     
+    .box {
+      position: relative;
+      width: 70%;
+      margin: 0 auto;
+      height: auto;
+      max-height: 70vh;
+      margin-top: calc(100vh - 85vh - 20px);
+      background: #fff;
+      border-radius: 4px;
+      padding: 20px;
+      border: 1px solid #999;
+      overflow: auto;
+    }
+     
+    .close-icon {
+      content: 'x';
+      cursor: pointer;
+      position: fixed;
+      right: calc(15% - 30px);
+      top: calc(100vh - 85vh - 33px);
+      background: #ededed;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      line-height: 20px;
+      text-align: center;
+      border: 1px solid #999;
+      font-size: 20px;
     }
