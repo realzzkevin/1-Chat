@@ -1,0 +1,170 @@
+/* all items in the main body */
+* {
+  /* background-color: white; */
+  padding: 0;
+  margin: 0; 
+  align-content: center;   
+  }
+
+  .nav {
+    background: rgb(243, 232, 219);
+  height: 200px;
+  }
+
+  .container {
+    background-color:rgb(243, 232, 219);
+    
+  }
+  .navbar-icons {
+    display: inline-block;
+    justify-content: left;
+  }
+
+  .container-md {
+    font-size: 350%;
+    max-width: 525px;
+    margin: auto;
+    align-content: center;
+  }
+
+  .welcome-bar {
+    
+    border-color: gray;
+    align-content: center;
+    margin: auto;
+    background-color: #C9B4B4;
+  }
+
+  ul {
+    border-left: none;
+    border-right: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #C9B4B4;
+    display:inline-block;
+    text-align: center;  }
+  
+  li {
+    float: right;
+  }
+  
+  li a {
+    display: inline-flex;
+    padding: 8px;
+    background-color: #C9B4B4;
+    color: black;
+  }
+  main {
+    background-color: #C9B4B4;
+  }
+
+  .column {
+    float: left;
+    padding: 10px;
+  }
+  
+  /* Left and right column */
+  .column.side {
+    width: 48%;
+    text-align: center;
+  }
+  
+  /* Middle column */
+  .column.middle {
+    width: 50%;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .card {
+    margin: 50px;
+    border-style: double;
+    border-radius: 0%;
+    border-color: #C9B4B4;
+    display:inline-block;
+    position:relative
+  }
+
+  .card-body {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    background-color: rgb(243, 232, 219);
+
+  }
+  .card-title {
+    background-color:#C9B4B4; 
+  }
+
+  .btn {
+    background-color:#C9B4B4; 
+    color:black;
+    border-radius: 5px;
+  }
+  
+  .card-container{
+    width: 300px;
+    overflow:hidden,
+
+  }
+
+  .img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* width: 75%; */
+  position: relative;
+  }
+
+  .image-container{
+
+    overflow: hidden;
+    height: 100px;
+    margin-left: auto;
+  margin-right: auto;
+  }
+
+  .Nish {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  position: relative;
+    
+  }
+  
+  @media only screen and (max-width:620px) {}
+    .menu, .main, .img {
+      width:100%;
+    }
+
+
+img {
+    height: 300px;
+    position: relative;
+}
+
+ input[type=textarea] {
+        width: 70%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+      }
+      @media screen and (max-width: 600px) {
+        .col-25, .col-75, input[type=submit] {
+          width: 100%;
+          margin-top: 0;
+        }
+      }
+      
+      
