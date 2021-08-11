@@ -1,27 +1,24 @@
 const { Schema, model } = require('mongoose');
+const messageSchema = require('./Message');
+const userSchema = require('./User');
 
 const ConversationSchema = new Schema({
 
-    friendId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    startTime: {
+    friendId: userSchema,
+    
+    createdAt: {
         type: Date,
         required: true,
         default: Date.now
     },
-    lastUpdatedTime: {
+    
+    lastUpdatedAt: {
         type: Date,
         required: true,
+        default: Date.now
     },
-    messages: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'Message'
-        }
-    ]
+    messages: [messageSchema],
 });
 
-const User = model('Conversation', ConversationSchema);
-model.exports = Conversation;;
+const Conversation = model('Conversation', ConversationSchema);
+model.exports = Conversation;

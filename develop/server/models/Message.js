@@ -3,22 +3,26 @@ const { Schema, model } = require('mongoose');
 const messageSchema = new Schema({
     senderId: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
 
     receiverId: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
 
-    time: {
+    createdAt: {
         type: Date,
         required: true,
         default: Date.now
     },
+    
     payload: {
         type: String,
-        required: true,
+        required: 'This message can not be blank',
+        minlength: 1,
     }
 })
 
