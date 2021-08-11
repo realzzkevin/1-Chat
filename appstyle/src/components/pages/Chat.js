@@ -1,9 +1,10 @@
 import React from 'react';
-// import Form from '../../Form';
+// import MessageBox from '../MessageBox.js';
 import Popup from '../Popup.js';
 import {useState} from 'react';
 
 import'../../App.css'
+import { MessageBox } from 'react-chat-elements';
 
 
 function Chat() {
@@ -16,15 +17,17 @@ function Chat() {
 
       <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
         <h3>My Popup</h3>
-  <div class="chat-popup" id="message-container">
-  <form id="send-container" action="/action_page.php" class="form-container">
-    <h1 style={{fontFamily: 'Merriweather'}} >1 <span style={{fontFamily: 'Cursive'}}>Chat</span></h1>
-    <label for="msg"><b></b></label>
-    <textarea input type="text" id="message-input" placeholder="Type message.." name="msg" required></textarea>
-    <button type="submit" id="send-button" class="btn">Send</button>
-  </form>
-</div>
-</div>
+        <MessageBox
+    position={'left'}
+    type={'photo'}
+    text={'react.svg'}
+    data={{
+        uri: 'https://facebook.github.io/react/img/logo.svg',
+        status: {
+            click: false,
+            loading: 0,
+        }
+    }}/>
       </Popup>
     </div>
 
