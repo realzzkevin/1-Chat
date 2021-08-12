@@ -7,13 +7,13 @@ const typeDefs = gql`
         eamil: String!
         password: String!
         friends: [User]
-        Conversations: [Conversation]
+        conversations: [Conversation]
     }
 
     type Conversation {
         _id: ID
         friendId: User!
-        lastUpdatedTime: Date!
+        lastUpdatedAt: Date!
         messages: [Message]
     }
 
@@ -21,7 +21,7 @@ const typeDefs = gql`
         _id: ID
         senderId: User!
         receiverId: User!
-        time: Date!
+        createdAt: Date!
         payload: String!
     }
 
@@ -31,10 +31,10 @@ const typeDefs = gql`
     }
 
     type Query {
-        me: [User]
-        allConversations: [conversations]
-        loadConversation(id: ID!): [message]
-        getFriends(username: String1): [user]
+        me: User
+        allConversations: User
+        loadConversation(chatID: ID!): Conversation
+        getFriends(username: String!): [User]
     }
 
     type Mutation {
