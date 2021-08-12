@@ -49,8 +49,8 @@ const typeDefs = gql`
             password: String!
         ): Auth
 
-        addFriend(_id: ID!): User
-        removeFriend(_id: ID!): User
+        addFriend(friendId: ID!): User
+        removeFriend(friendId: ID!): User
         newChat(_id: ID!): Conversation
         deleteChat(_id: ID!): Conversation
         addMessage(senderId: ID!, receiverId: ID!, payload: String): Conversation

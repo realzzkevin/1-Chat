@@ -1,8 +1,6 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const ConversationSchema = require('./Conversation');
-
 const userSchema = new Schema({
     username: {
         type: String,
@@ -25,9 +23,19 @@ const userSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    friends: [User],
+    friends: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        }
+    ],
 
-    conversations: [ConversationSchema],
+    conversations: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Conversation',
+        }
+    ],
 });
 
 userSchema.pre('save', async function (next) {

@@ -4,7 +4,10 @@ const userSchema = require('./User');
 
 const ConversationSchema = new Schema({
 
-    friendId: userSchema,
+    friendId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
     
     createdAt: {
         type: Date,
@@ -17,7 +20,12 @@ const ConversationSchema = new Schema({
         required: true,
         default: Date.now
     },
-    messages: [messageSchema],
+    messages: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Message'
+        }
+    ],
 });
 
 const Conversation = model('Conversation', ConversationSchema);
