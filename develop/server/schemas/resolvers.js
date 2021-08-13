@@ -4,24 +4,27 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
+        // load user information and populate a friend list
         me: async (parent, args, context) => {
             if (context.user) {
                 return User.findOne({ _id: context.user._id }).populate('friends');
             }
             throw new AuthenticationError('Please login first.')
         },
-
+        // populate conversations under one user
         allConversations: async (parent, args, context) => {
             if (context.user) {
-                return User.findOne({ _id: context.user._id }).populate('Conversations', { sort: { 'lastUpdateAt': -1 } });
+                return User.findOne({ _id: context.user._id }).populate('conversations', { sort: { 'updateAt': -1 } });
             }
             throw new AuthenticationError('Please login first.')
         },
+        // take a conversation ID (chatID), return a conversation with all messages.
         loadConversation: async (parent, { chatID }, context) => {
             if (context.user) {
                 return Conversation.find({ _id: chatID }).populate('messages', { sort: { 'createdAt': -1 } });
             }
         },
+        // find users by their username.
         getFriends: async (parent, { username }) => {
             const params = username ? { username } : {};
             return User.find(params).sort({ username: -1 });
@@ -35,6 +38,7 @@ const resolvers = {
             return { token, user };
         },
         login: async (parent, { email, password }) => {
+
             const user = await User.findOne({ email });
 
             if (!user) {
@@ -51,24 +55,109 @@ const resolvers = {
 
             return { token, user };
         },
-        addFriend: async ( parent, { friendId }, context) => {
+        
+        addFriend: async (parent, { friendId }, context) => {
             if (context.user) {
-                const newFriend = await User.findOne({ _id: friendId });
+                //const newFriend = await User.findOne({ _id: friendId });
 
                 const user = await User.findOneAndUpdate(
-                    {_id: context.user._id},
-                    { $addToSet: {friends: newFriend}}
+                    { _id: context.user._id },
+                    { $addToSet: { friends: friendId } },
+                    { new: true, runValidators: true }
                 );
                 return user;
             }
             throw new AuthenticationError("Please login.")
         },
 
-        removeFriend: async ( parent, { friendId }, context ) => {
-
+        removeFriend: async (parent, { friendId }, context) => {
+            if (context.user) {
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { friends: friendId } },
+                    { $pull: { conversations: friendId } },
+                    { new: true },
+                );
+                return updatedUser;
+            }
+            throw new AuthenticationError('please login to delete friend')
         },
 
-        newChat
+        newChat: async (parent, { friendId }, context) => {
+            if (context.user) {
+                const chat = await Conversation.create({ friendId });
+                await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $addToSet: { conversations: chat._id } },
+                    { new: true, runValidators: true },
+                )
+                return chat;
+            }
+            throw new AuthenticationError('Please log in to start chat.')
+        },
+
+        deleteChat: async (parent, { chatId }, context) => {
+            if (context.user) {
+                const chat = await Conversation.findOneAndDelete({
+                    _id: chatId
+                });
+
+                await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { conversations: chatId } },
+                    { new: true },
+                )
+                return updatedUser;
+
+            }
+        },
+
+        sendMessage: async (parent, { chatId, receiverId, payload }, context) => {
+            if (context.user) {
+                const newMessage = await Message.create({
+                    senderId: context.user._id,
+                    receiverId: receiverId,
+                    payload: payload,
+                });
+
+                await Conversation.findOneAndUpdate(
+                    { _id: chatId },
+                    { $addToSet: { messages: newMessage._id } }
+                );
+                return newMessage
+            }
+            throw new AuthenticationError('Please log in.')
+        },
+
+        receiveMessage: async (parent, { chatId, senderId, payload }, context) => {
+            if (context.user) {
+                const newMessage = await Message.create({
+                    senderId: senderId,
+                    receiverId: context.user._id,
+                    payload: payload,
+                });
+
+                await Conversation.findOneAndUpdate(
+                    { _id: chatId },
+                    { $addToSet: { messages: newMessage._id } }
+                );
+                return newMessage
+            }
+            throw new AuthenticationError('Please log in.')
+        },
+
+        deleteMessage: async (parent, { messageId }, context) => {
+            if (context.user) {
+                const message = await Message.findOneAndDelete({
+                    _id: messageId,
+                    senderId: context.user._id,
+                });
+                return message;
+            }
+            throw new AuthenticationError('Please log in first.')
+        }
+
+
 
 
     },

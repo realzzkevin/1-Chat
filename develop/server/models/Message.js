@@ -13,18 +13,13 @@ const messageSchema = new Schema({
         required: true
     },
 
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-    
     payload: {
         type: String,
         required: 'This message can not be blank',
         minlength: 1,
     }
-})
+    //timestamps option enabled
+}, {timestamps: true});
 
 const Message = model('Message', messageSchema);
 
