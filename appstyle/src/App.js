@@ -1,9 +1,14 @@
 import React from 'react';
-import PortfolioContainer from "./components/PortfolioContainer";
-// import Popup from './Popup';
 import './App.css'; 
-const App = () => <PortfolioContainer />
+import Nav from "./components/nav/Nav"
+import Chatbody from "./components/chatBody/Chatbody"
 
+function App() {
+    return <div className="_main">
+<Nav />
+<Chatbody />
 
+    </div>
+}
 
 export default App;
