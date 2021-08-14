@@ -14,7 +14,11 @@ const typeDefs = gql`
         _id: ID
         friendId: ID!
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         updatedAt: Date
+=======
+        updatedAt: Int
+>>>>>>> Stashed changes
 =======
         updatedAt: Int
 >>>>>>> Stashed changes
@@ -26,7 +30,11 @@ const typeDefs = gql`
         senderId: ID!
         receiverId: ID!
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         createdAt: Date
+=======
+        createdAt: Int
+>>>>>>> Stashed changes
 =======
         createdAt: Int
 >>>>>>> Stashed changes

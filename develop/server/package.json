@@ -13,7 +13,11 @@
   "license": "ISC",
   "dependencies": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "apollo-server": "^3.1.2",
+=======
+    "apollo-server-express": "^3.1.2",
+>>>>>>> Stashed changes
 =======
     "apollo-server-express": "^3.1.2",
 >>>>>>> Stashed changes

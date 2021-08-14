@@ -3,7 +3,6 @@ import { ChatEngine } from 'react-chat-engine';
 import LoginForm from './utils/login';
 import './App.css';
 
-<<<<<<< Updated upstream
 
 
 function App() {
@@ -14,14 +13,19 @@ function App() {
    
    
   )
-}
-=======
-// Need projectID
+
 
 const App = () => {
   if (!localStorage.getItem('username')) return <LoginForm />;
 
   return (
+
+
+const App = () => {
+  if (!localStorage.getItem('username')) return <LoginForm />;
+
+  return (
+
     <ChatEngine
       height="100vh"
      // projectID={projectID}
@@ -31,6 +35,6 @@ const App = () => {
   );
 };
 
->>>>>>> Stashed changes
+
 
 export default App;

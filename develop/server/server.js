@@ -1,5 +1,6 @@
 const express = require('express');
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 const { ApolloServer } = require ('apollo-server-express');
 const path = require('path');
 
@@ -27,6 +28,8 @@ io.on("connection", Socket => {
 
 })
 =======
+=======
+>>>>>>> Stashed changes
 const path = require('path');
 const { ApolloServer } = require('apollo-server-express');
 
@@ -115,6 +118,9 @@ io.on("connection", (Socket) => {
         io.emit("getUsers", users);
     });
 });
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 
@@ -122,6 +128,7 @@ if (process.env.NODE_ENV == 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 app.get('*', (req, res) =>{
     res.sendFile(path.join(__dirname, '../client/build/index.html'))
@@ -133,6 +140,8 @@ db.once('open', () =>{
     })
 })
 =======
+=======
+>>>>>>> Stashed changes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build/index.html'))
 });
@@ -145,4 +154,7 @@ db.once('open', () => {
         console.log(`API server running on port ${PORT}!`);
     });
 });*/
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
