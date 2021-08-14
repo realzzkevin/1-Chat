@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-rout-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { ChatEngine } from 'react-chat-engine';
+//import { ChatEngine } from 'react-chat-engine';
 import LoginForm from './utils/login';
 import './App.css';
 
@@ -27,7 +27,12 @@ const client = new ApolloClient({
 });
 
 
-
+        //<ChatEngine
+          //height="100vh"
+          // projectID={projectID}
+          //userName={localStorage.getItem('username')}
+          //userSecret={localStorage.getItem('password')}
+          ///>
 // Need projectID
 
 const App = () => {
@@ -36,12 +41,7 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <Router>
-        <ChatEngine
-          height="100vh"
-          // projectID={projectID}
-          userName={localStorage.getItem('username')}
-          userSecret={localStorage.getItem('password')}
-        />
+        <LoginForm />
       </Router>
     </ApolloProvider>
   );
