@@ -3,7 +3,7 @@ import { ChatEngine } from 'react-chat-engine';
 import LoginForm from './utils/login';
 import './App.css';
 
-// Need projectID
+const projectID='91bdc97f 65b7-466a-b21e-1fd7b4fb154c';
 
 const App = () => {
   if (!localStorage.getItem('username')) return <LoginForm />;
@@ -11,7 +11,7 @@ const App = () => {
   return (
     <ChatEngine
       height="100vh"
-     // projectID={projectID}
+      projectID={projectID}
       userName={localStorage.getItem('username')}
       userSecret={localStorage.getItem('password')}
     />
