@@ -8,8 +8,7 @@ const { authMiddleware } = require('./utils/auth');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-
-
+// start apollo server
 async function startApolloServer() {
     const server = new ApolloServer({
         typeDefs,
@@ -42,13 +41,7 @@ const io = socketIo(httpServer);
 
 //const httpServer = require("http").createServer(app);
 //httpServer.listen(PORT);
-/*
-httpServer.listen(process.env.PORT || 3001, function() {
-    const HOST = http.address().address;
-    const PORT = http.address().port;
-    console.log('App listening at http://%s:%s', HOST, PORT)
-   });
-*/
+
 //initial socket.io
 const io = require("socket.io")(httpServer, {
     cors: {
@@ -56,7 +49,6 @@ const io = require("socket.io")(httpServer, {
     },
 });
 
-//httpServer.listen(process.env.PORT || 3000);
 let users = [];
 
 const addUser = (userId, socketId) => {
