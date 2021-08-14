@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 //import { ChatEngine } from 'react-chat-engine';
-import LoginForm from './utils/login';
+//import LoginForm from './utils/login';
+import SignUpPage from './utils/signup';
 import './App.css';
 
 const httpLink = createHttpLink({
@@ -36,12 +37,12 @@ const client = new ApolloClient({
 // Need projectID
 
 const App = () => {
-  if (!localStorage.getItem('username')) return <LoginForm />;
+  //if (!localStorage.getItem('username')) return <LoginForm />;
 
   return (
     <ApolloProvider client={client}>
       <Router>
-        <LoginForm />
+        <SignUpPage />
       </Router>
     </ApolloProvider>
   );

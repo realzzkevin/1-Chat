@@ -20,4 +20,4 @@ const ConversationSchema = new Schema({
 }, { timestamps: true });
 
 const Conversation = model('Conversation', ConversationSchema);
-model.exports = Conversation;
+module.exports = Conversation;
