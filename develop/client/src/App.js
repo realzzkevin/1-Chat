@@ -4,7 +4,8 @@ import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@ap
 import { setContext } from '@apollo/client/link/context';
 //import { ChatEngine } from 'react-chat-engine';
 //import LoginForm from './utils/login';
-import SignUpPage from './utils/signup';
+import SignUpPage from './pages/signup';
+import Login from './pages/login';
 import './App.css';
 
 const httpLink = createHttpLink({
@@ -42,7 +43,11 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <Router>
-        <SignUpPage />
+        <Switch>
+          <Route exact path='/' component={Login} />
+          <Route exact path='/signup' component={SignUpPage} />
+          <Route render = { () => <h1>Wrong Page</h1>} />
+        </Switch>
       </Router>
     </ApolloProvider>
   );
