@@ -1,29 +1,33 @@
-import { useState } from 'react';
-//import axios from 'axios';
+import React, { useState } from 'react';
+import Auth from '../utils/auth';
+import { useMutation } from '@apollo/client';
+import { LOGIN_USER } from '../utils/mutation';
+
 
 //TO-DO Define projectID here
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [ email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [ login, { error } ] = useMutation(LOGIN_USER);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const authObject = { 'Project-ID': 1, 'User-Name': username, 'User-Secret': password };
-/*
     try {
-      await axios.get('https://api.chatengine.io/chats', { headers: authObject });
-
-      localStorage.setItem('username', username);
-      localStorage.setItem('password', password);
-
-      window.location.reload();
-      setError('');
+        const { data } = await login({
+            variables: {
+                email: email,
+                password: password,
+            }
+        });
+        console.log(data);
+        Auth.login(data.login.token);
+        
     } catch (err) {
-      setError('Oops, incorrect credentials.');
-    }*/
+        console.error(err);
+    };
+
   };
 
   return (
@@ -31,7 +35,7 @@ const Login = () => {
       <div className="form">
         <h1 className="title">1-Chat</h1>
         <form onSubmit={handleSubmit}>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className="input" placeholder="Username" required />
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input" placeholder="Email" required />
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="input" placeholder="Password" required />
           <div align="center">
             <button type="submit" className="button">
@@ -39,7 +43,6 @@ const Login = () => {
             </button>
           </div>
         </form>
-        <h1>{error}</h1>
       </div>
     </div>
 
