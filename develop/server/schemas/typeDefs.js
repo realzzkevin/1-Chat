@@ -13,7 +13,11 @@ const typeDefs = gql`
     type Conversation {
         _id: ID
         friendId: ID!
+<<<<<<< Updated upstream
         updatedAt: Date
+=======
+        updatedAt: Int
+>>>>>>> Stashed changes
         messages: [Message]
     }
 
@@ -21,7 +25,11 @@ const typeDefs = gql`
         _id: ID
         senderId: ID!
         receiverId: ID!
+<<<<<<< Updated upstream
         createdAt: Date
+=======
+        createdAt: Int
+>>>>>>> Stashed changes
         payload: String!
     }
 

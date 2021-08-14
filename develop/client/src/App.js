@@ -1,7 +1,9 @@
-import React from 'react';
-import logo from './logo.svg';
+import { ChatEngine } from 'react-chat-engine';
+
+import LoginForm from './utils/login';
 import './App.css';
 
+<<<<<<< Updated upstream
 
 
 function App() {
@@ -13,5 +15,22 @@ function App() {
    
   )
 }
+=======
+// Need projectID
+
+const App = () => {
+  if (!localStorage.getItem('username')) return <LoginForm />;
+
+  return (
+    <ChatEngine
+      height="100vh"
+     // projectID={projectID}
+      userName={localStorage.getItem('username')}
+      userSecret={localStorage.getItem('password')}
+    />
+  );
+};
+
+>>>>>>> Stashed changes
 
 export default App;
