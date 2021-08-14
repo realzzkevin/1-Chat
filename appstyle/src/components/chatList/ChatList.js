@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import "./friendslist.css"
-// import Friendslist from './Friendslist';
+import Friendslist from './Friendslist';
 
 export default class ChatList extends Component {
     render() {
@@ -24,7 +24,7 @@ export default class ChatList extends Component {
             </button>
             </div>
             </div>
-            {/* <div className="chatlist_items">
+            {<div className="chatlist_items">
                 {this.state.allChats.map((item, index) => {
                     return (
                         <Friendslist
@@ -34,7 +34,7 @@ export default class ChatList extends Component {
                     )
                 }
                 )}
-            </div> */}
+            </div> }
             </div>
         );
     }
