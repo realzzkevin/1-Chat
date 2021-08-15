@@ -14,15 +14,16 @@ async function startApolloServer() {
     const server = new ApolloServer({
         typeDefs,
         resolvers,
-        context: authMiddleware
+        context: authMiddleware,
     });
+
     await server.start();
     server.applyMiddleware({ app });
 };
 
 startApolloServer();
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const httpServer = app.listen(PORT,() => {
@@ -90,7 +91,7 @@ io.on("connection", (Socket) => {
 });
 
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
 }
 

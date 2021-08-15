@@ -5,9 +5,9 @@ const typeDefs = gql`
         _id: ID!
         username: String!
         email: String!
-        password: String!
-        friends: [ID]
-        conversations: [ID]
+        password: String
+        friends: [User]
+        conversations: [Conversation]
     }
 
     type Conversation {
@@ -31,8 +31,8 @@ const typeDefs = gql`
     }
 
     type Query {
-        me: User
-        allConversations: User
+        me: User!
+        allConversations: User!
         loadConversation(_id: ID!): Conversation
         getFriends(username: String!): [User]
     }

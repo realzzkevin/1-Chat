@@ -2,14 +2,17 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-//import { ChatEngine } from 'react-chat-engine';
+
 //import LoginForm from './utils/login';
+import Auth from './utils/auth';
 import SignUpPage from './pages/signup';
 import Login from './pages/login';
+import MainPage from './pages/maincontainer';
 import './App.css';
 
+
 const httpLink = createHttpLink({
-  uri: 'graphql',
+  uri: '/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -28,25 +31,24 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-
-        //<ChatEngine
-          //height="100vh"
-          // projectID={projectID}
-          //userName={localStorage.getItem('username')}
-          //userSecret={localStorage.getItem('password')}
-          ///>
-// Need projectID
-
 const App = () => {
-  //if (!localStorage.getItem('username')) return <LoginForm />;
+
+  const isLogin = Auth.loggedIn();
 
   return (
     <ApolloProvider client={client}>
       <Router>
         <Switch>
-          <Route exact path='/' component={Login} />
-          <Route exact path='/signup' component={SignUpPage} />
-          <Route render = { () => <h1>Wrong Page</h1>} />
+          <Route exact path = "/Home">
+            { isLogin ? <MainPage /> : <Login/>  } 
+          </Route>
+          <Route exact path='/'>
+            { isLogin ? <MainPage /> : <Login/>}
+          </Route>
+          <Route exact path='/signup'>
+          { isLogin ? <MainPage /> : <SignUpPage/>}
+          </Route>
+          <Route render = { () => <h1>Please login or signup</h1>} />
         </Switch>
       </Router>
     </ApolloProvider>
