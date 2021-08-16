@@ -91,8 +91,8 @@ const resolvers = {
         newChat: async (parent, { friendId }, context) => {
 
             if (context.user) {
-                const id = mongoose.Types.ObjectId(friendId);
-                const chat = await Conversation.create({ friendId: id });
+                //const id = mongoose.Types.ObjectId(friendId);
+                const chat = await Conversation.create({ friendId: friendId });
                 /*await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $addToSet: { conversations: chat._id } },
