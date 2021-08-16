@@ -1,7 +1,8 @@
+
 const { User, Conversation, Message } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
-const { mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 
 const resolvers = {
     Query: {
@@ -57,8 +58,7 @@ const resolvers = {
             return { token, user };
         },
         
-        addFriend: async (parent, { username }, context) => {
-            
+        addFriend: async (parent, { username }, context) => {            
 
             if (context.user) {
                 //const newFriend = await User.findOne({ _id: String(friendId) });
@@ -89,13 +89,15 @@ const resolvers = {
         },
 
         newChat: async (parent, { friendId }, context) => {
+
             if (context.user) {
-                const chat = await Conversation.create({ friendId });
-                await User.findOneAndUpdate(
+                const id = mongoose.Types.ObjectId(friendId);
+                const chat = await Conversation.create({ friendId: id });
+                /*await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $addToSet: { conversations: chat._id } },
-                    { new: true, runValidators: true },
-                )
+                    //{ new: true },
+                )*/
                 return chat;
             }
             throw new AuthenticationError('Please log in to start chat.')

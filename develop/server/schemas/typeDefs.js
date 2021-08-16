@@ -51,7 +51,7 @@ const typeDefs = gql`
 
         addFriend(username: String!): User
         removeFriend(username: String!): User
-        newChat(friendId: String!): Conversation
+        newChat(friendId: ID!): Conversation
         deleteChat(_id: String!): Conversation
         sendMessage( _id: String!, receiverId: String!, payload: String!): Message
         receiveMessage( _id: String!, senderId: String!, payload: String!): Message

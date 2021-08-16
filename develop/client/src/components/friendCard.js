@@ -8,13 +8,13 @@ const FriendCard = (props) => {
         <div>
             <h3>
                 <p>
-                    {props.id}
+                    {props.friendId}
                 </p>
             </h3>
 
-            <h3>
-                <span>{props.name}</span>
-            </h3>
+            <h2>
+                <span>{props.friendName}</span>
+            </h2>
         </div>
     )
 };

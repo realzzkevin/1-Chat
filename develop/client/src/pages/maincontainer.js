@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 //import { link } from 'react-router-dom';
 import { io } from "socket.io-client";
-
 import Auth from '../utils/auth';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { QUERY_ME, QUERY_ALLCHATS, QUERY_LOADCHAT, QUERY_FRIENDS } from '../utils/queries';
@@ -15,7 +14,7 @@ import FriendCard from '../components/friendCard';
 import SearchRes from '../components/seachres';
 
 const MainPage = () => {
-    const { loading, data } = useQuery(QUERY_ME);
+    const { loading, data, refetch } = useQuery(QUERY_ME);
 
     const userData = data?.me || {};
     const friendList = data?.me.friends || {};
@@ -28,18 +27,16 @@ const MainPage = () => {
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
     
-    //setFreindList(data?.friends || {});
-    const socket = useRef();    
-    //const [searchfriends] = useQuery(QUERY_FRIENDS);
-    
     const [submitSearch, { loading: searchLoading, data: searchData }] = useLazyQuery(QUERY_FRIENDS, { variables: { username: searchInput } });
     const results = searchData?.getFriends || [];
     const [addFriend] = useMutation(ADD_FRIEND);
     const [newChat] = useMutation(NEW_CHAT);
     const [sendMessage] = useMutation(SEND_MESSAGE);
     const [incomingMessage] = useMutation(RECEIVE_MESSAGE);
-
+    
+    const socket = useRef();        
     const scrollRef = useRef();
+
     useEffect(() => {
         socket.current = io("http://localhost:3000");
         socket.current.on("getMessage", (data) => {
@@ -68,12 +65,11 @@ const MainPage = () => {
             if (!searchLoading) {                
                 console.log("search results");
                 console.log(searchData);
-                //setResults(searchData.getFriends);
             }
-            //const { data } = await searchfriends( { variables: {username: searchInput}});
         } catch (err) {
             console.error(err);
         }
+
     };
 
     const handleAddFriend = async (username) => {
@@ -83,22 +79,24 @@ const MainPage = () => {
         }
         try {
             await addFriend({ variables: { username: username } });
-            //setFreindList(data.friends);
 
         } catch (err) {
             return false
         }
+
+        setSearchInput("");
+        refetch();
     };
 
     const handleStartChat = async (friendId) => {
+
         if (!friendId) {
             return false;
         };
 
         const chatList = userData.conversations;
-
         chatList.forEach(chat => {
-            if (chat.friendId === friendId) {
+            if (chat.friendId.toSring() === friendId) {
                 //continue chat
                 setCurrentChat(chat);
                 return;
@@ -131,7 +129,6 @@ const MainPage = () => {
         //setFreindList(userData.friends)
     };
 
-
     return (
         <>
             <Navbar userInfo={userData} />
@@ -139,12 +136,8 @@ const MainPage = () => {
                 <div className="friends">
                     <div className="fList">
                         {friendList.map((each) => (
-                            <div key={each._id} onClick={() => handleStartChat(each._id)}>
-                                <FriendCard
-                                    friend={each}
-                                //currentId={each._id}
-                                //setCurrentChat={setCurrentChat}
-                                />
+                            <div key={each._id} onClick={() => handleStartChat(each._id)}>                                
+                                <FriendCard friendName={each.username} friendId= {each._id}/>
                             </div>
                         ))}
 

@@ -53,7 +53,7 @@ export const DELETE_FRIEND = gql`
 `;
 
 export const NEW_CHAT = gql`
-    mutation newChat($friendId: String!){
+    mutation newChat($friendId: ID!){
         newChat(friendId: $friendId) {
             _id
             friendId
