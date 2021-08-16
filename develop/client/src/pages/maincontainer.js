@@ -30,7 +30,7 @@ const MainPage = () => {
     
     const [submitSearch, { loading: searchLoading, data: searchData }] = useLazyQuery(QUERY_FRIENDS, { variables: { username: searchInput } });
     const results = searchData?.getFriends || [];
-    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { }} )
+    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { _id: currentChat._id }} );
     const messageData = allMessages?.loadConversation || [];
 
     const [addFriend] = useMutation(ADD_FRIEND);
@@ -53,8 +53,8 @@ const MainPage = () => {
       }, []);
 
     useEffect(() => {
-       // socket.current.useMutation("addUser", userData._id);
-        //socket.current.on()
+        socket.current.emit("addUser", userData._id);
+        socket.current.on()
     })
 
 
@@ -126,8 +126,38 @@ const MainPage = () => {
 
     };
     
-    const handleMessageSubmit = async() => {
+    const handleMessageSubmit = async(event) => {
+        event.preventDefault();
+        if(!newMessage){
+            return false;
+        }
+        const message = {
+            senderId: userData._id,
+            receiverId: currentChat.friendId,
+            payload: newMessage,           
+        };
 
+        socket.current.useMutation('sendMessage', {
+            senderId: message.senderId,
+            receiverId: message.receiverId,
+            payload: message.payload,
+        });
+        // save send message into database
+        try {
+            await sendMessage({
+                variables: {
+                    chatId : currentChat._id,
+                    receiverId: message.receiverId,
+                    payload: message.payload,
+                }
+            })
+
+            fetchMessage();
+            setNewMessage('');
+
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     if (loading) {

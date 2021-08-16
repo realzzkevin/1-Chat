@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Auth from "../utils/auth";
 
 const Navbar = (props) => {
 
@@ -7,6 +8,7 @@ const Navbar = (props) => {
             <div className="container-fluid">
                 <a className="navbar-brand" >{props.userInfo.username}</a>
             </div>
+            <a onClick={()=>Auth.logout()}> logout </a>
         </nav>
     )
 
