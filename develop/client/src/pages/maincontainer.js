@@ -12,6 +12,7 @@ import Navbar from '../components/Navbar';
 import Message from '../components/message';
 import FriendCard from '../components/friendCard';
 import SearchRes from '../components/seachres';
+import './main.css';
 
 const MainPage = () => {
     const { loading, data, refetch } = useQuery(QUERY_ME);
@@ -29,6 +30,9 @@ const MainPage = () => {
     
     const [submitSearch, { loading: searchLoading, data: searchData }] = useLazyQuery(QUERY_FRIENDS, { variables: { username: searchInput } });
     const results = searchData?.getFriends || [];
+    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { }} )
+    const messageData = allMessages?.loadConversation || [];
+
     const [addFriend] = useMutation(ADD_FRIEND);
     const [newChat] = useMutation(NEW_CHAT);
     const [sendMessage] = useMutation(SEND_MESSAGE);
@@ -47,6 +51,11 @@ const MainPage = () => {
           });
         });
       }, []);
+
+    useEffect(() => {
+       // socket.current.useMutation("addUser", userData._id);
+        //socket.current.on()
+    })
 
 
     const handleSearchSubmit = async (event) => {
@@ -144,7 +153,7 @@ const MainPage = () => {
                     </div>
                 </div>
                 <div className="chatBox">
-                    <div className="chatBoxWrapper">
+                    <div className="boxWrapper">
                         {currentChat ? (
                             <>
                                 <div className="chatNavbar">
@@ -161,7 +170,7 @@ const MainPage = () => {
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         value={newMessage}
                                     ></textarea>
-                                    <button className="chatSubmitButton" onClick={handleMessageSubmit}>
+                                    <button className="messageButton" onClick={handleMessageSubmit}>
                                         Send
                                     </button>
                                 </div>
