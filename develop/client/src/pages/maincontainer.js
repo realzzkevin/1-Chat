@@ -30,8 +30,8 @@ const MainPage = () => {
     
     const [submitSearch, { loading: searchLoading, data: searchData }] = useLazyQuery(QUERY_FRIENDS, { variables: { username: searchInput } });
     const results = searchData?.getFriends || [];
-    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { _id: currentChat._id }} );
-    const messageData = allMessages?.loadConversation || [];
+    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { }} );
+    const messageData = allMessages?.loadConversation.messages || [];
 
     const [addFriend] = useMutation(ADD_FRIEND);
     const [newChat] = useMutation(NEW_CHAT);
