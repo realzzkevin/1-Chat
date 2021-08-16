@@ -13,7 +13,7 @@ const typeDefs = gql`
     type Conversation {
         _id: ID
         friendId: String!
-        updatedAt: Int
+        updatedAt: Float
         messages: [Message]
     }
 
@@ -21,7 +21,7 @@ const typeDefs = gql`
         _id: ID
         senderId: String!
         receiverId: String!
-        createdAt: Int
+        createdAt: Float
         payload: String!
     }
 

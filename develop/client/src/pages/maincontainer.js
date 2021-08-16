@@ -114,10 +114,10 @@ const MainPage = () => {
 
         //never chat with this friend before
         try {
-            const { data } = await newChat({ variables: { friendId: friendId } });
+            const  Data  = await newChat({ variables: { friendId: friendId } });
             console.log('new chat');
-            console.log(data);
-            setCurrentChat(data.newChat);
+            console.log(Data);
+            setCurrentChat(Data.newChat);
 
         } catch (err) {
             console.log(err);
