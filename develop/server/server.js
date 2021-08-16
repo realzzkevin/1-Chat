@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+//const cors = require('cors');
 const { ApolloServer } = require('apollo-server-express');
 
 const db = require('./config/connection');
@@ -23,6 +24,7 @@ async function startApolloServer() {
 
 startApolloServer();
 
+//app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -38,16 +40,18 @@ const io = socketIo(httpServer);
 */
 //var express = require('express'),
 //app = express(),
-//   server = require('http').createServer(app),
+//const Server = require('http').createServer(app);
 //   io = require('socket.io').listen(server),
 
 //const httpServer = require("http").createServer(app);
 //httpServer.listen(PORT);
 
 //initial socket.io
+
 const io = require("socket.io")(httpServer, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
     },
 });
 
@@ -69,7 +73,7 @@ const getUser = (userId) => {
 
 io.on("connection", (Socket) => {
     console.log(`user ${Socket.id} connected`);
-
+    
     Socket.on("addUser", (userId) => {
         addUser(userId, Socket.id);
         io.emit("getUsers", users);
@@ -87,6 +91,7 @@ io.on("connection", (Socket) => {
         console.log(`user ${Socket.id} disconnected!`);
         removeUser(Socket.id);
         io.emit("getUsers", users);
+        
     });
 });
 

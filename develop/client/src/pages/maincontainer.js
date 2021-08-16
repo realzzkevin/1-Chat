@@ -1,17 +1,16 @@
-import React, { useState, useEffect, } from 'react';
-import { link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+//import { link } from 'react-router-dom';
 import { io } from "socket.io-client";
 
 import Auth from '../utils/auth';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { QUERY_ME, QUERY_ALLCHATS, QUERY_LOADCHAT, QUERY_FRIENDS } from '../utils/queries';
-import { ADD_FRIEND, DELETE_FRIEND, NEW_CHAT, DELETE_CHAT, SEND_MESSAGE, RECEIVE_MESSAGE, DELETED_MESSAGE} from '../utils/mutation';
+import { ADD_FRIEND, DELETE_FRIEND, NEW_CHAT, DELETE_CHAT, SEND_MESSAGE, RECEIVE_MESSAGE, DELETED_MESSAGE } from '../utils/mutation';
 
-import Profile from '../components/userprofile';
+//import Profile from '../components/userprofile';
 import Navbar from '../components/Navbar';
-import Friends from '../components/friends';
+//import Friends from '../components/friends';
 import Message from '../components/message';
-import Button from 'react-bootstrap/Button';
 import FriendCard from '../components/friendCard';
 import SearchRes from '../components/seachres';
 
@@ -21,49 +20,70 @@ const MainPage = () => {
 
     const [results, setResults] = useState([]);
     const [searchInput, setSearchInput] = useState('');
-    const [friendList, setFreindList ] = useState();
+    const [friendList, setFreindList] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
-    const socket = useRef();
 
+    //setFreindList(data?.friends || {});
+    //const socket = useRef();
+    const socket = io("http://localhost:3000");
+    
     //const [searchfriends] = useQuery(QUERY_FRIENDS);
-
+    
+    const [submitSearch, { loading: searchLoading, data: searchData }] = useLazyQuery(QUERY_FRIENDS, { variables: { username: searchInput } });
     const [addFriend] = useMutation(ADD_FRIEND);
-    const []
+    const [newChat] = useMutation(NEW_CHAT);
+    const [sendMessage] = useMutation(SEND_MESSAGE);
+    const [incomingMessage] = useMutation(RECEIVE_MESSAGE);
+
     const scrollRef = useRef();
 
-    const handleSearchSubmit = async (event) =>{
+    /*useEffect(() => {
+        //socket.current = io("http://localhost:8000");
+        socket.on('getMessage', (data) => {
+            setArrivalMessage({
+                sender: data.senderId,
+                text: data.text,
+                createdAt: Date.now(),
+            });
+        });
+    }, )
+    */
+
+
+    const handleSearchSubmit = async (event) => {
         event.preventDefault();
-        
+
         /*const token = Auth.loggedIn() ? Auth.getToken() : null;
         if (!token) {
           return false;
         }*/
 
-        if(!searchInput){
+        if (!searchInput) {
             return false;
         }
-        
         try {
-            const { loading: searchLoading, data: searchData} = useQuery(QUERY_FRIENDS, { variables: { username: searchInput}});
+            submitSearch();
+            if (!searchLoading) {
+                
+                console.log("search results");
+                console.log(searchData);
+                setResults(searchData.getFriends);
+            }
             //const { data } = await searchfriends( { variables: {username: searchInput}});
-            console.log("search results");
-
-            console.log(data);
-            setResults(data.getFriends);
-
         } catch (err) {
-          console.error(err);
+            console.error(err);
         }
     };
-    const handleAddFriend = async (userId) =>{
-        if(!userId) {
+
+    const handleAddFriend = async (userId) => {
+        if (!userId) {
             return false;
         }
         try {
-            const { data } = await addFriend({ variables: {_id: userId} });
+            const { data } = await addFriend({ variables: { _id: userId } });
             console.log('addfriend');
             console.log(data);
             setFreindList(data.friends);
@@ -71,35 +91,47 @@ const MainPage = () => {
         } catch (err) {
             return false
         }
-    }
+    };
 
-    const handleStartChat = async (userId) => {
-        if(!userId) {
+    const handleStartChat = async (friendId) => {
+        if (!friendId) {
             return false;
-        }
+        };
 
         const chatList = userData.conversations;
 
         chatList.forEach(chat => {
-            if (chat.friendId === userId){
+            if (chat.friendId === friendId) {
                 //continue chat
-
+                setCurrentChat(chat);
                 return;
-            }        
+            };
         });
 
         //never chat with this friend before
+        try {
+            const { data } = await newChat({ variables: { friendId: friendId } });
+            console.log('new chat');
+            console.log(data);
+            setCurrentChat(data.newChat);
 
-        const { data } = await 
-    }
+        } catch (err) {
+            console.log(err);
+            console.log('cannot create new chat');
+        }
+
+    };
+    
+    const handleMessageSubmit = async() => {
+
+    };
 
     if (loading) {
         return <h2> LOADING ...</h2>
-
-    } else {
-        console.log(userData);
-        setFreindList(userData.friends)
-    };
+    }/* else {
+        //console.log(userData);
+        //setFreindList(userData.friends)
+    };*/
 
 
     return (
@@ -107,17 +139,17 @@ const MainPage = () => {
             <Navbar userInfo={userData} />
             <div className="chatUI">
                 <div className="friends">
-                    <div className="friendList">
-                        {friendList.map((each)=>(
-                            <div key={each._id} onClick={()=>handleStartChat(each._id)}>
+                    <div className="fList">
+                        {friendList.map((each) => (
+                            <div key={each._id} onClick={() => handleStartChat(each._id)}>
+                                <FriendCard
+                                    friend={each}
+                                //currentId={each._id}
+                                //setCurrentChat={setCurrentChat}
+                                />
                             </div>
                         ))}
 
-                        <FriendCard
-                            friend={friend}
-                            currentId={user._id}
-                            setCurrentChat={setCurrentChat}
-                        />
                     </div>
                 </div>
                 <div className="chatBox">
@@ -127,7 +159,7 @@ const MainPage = () => {
                                 <div className="chatNavbar">
                                     {messages.map((m) => (
                                         <div ref={scrollRef}>
-                                            <Message message={m} own={m.sender === user._id} />
+                                            <Message message={m} own={m.sender === userData._id} />
                                         </div>
                                     ))}
                                 </div>
@@ -138,7 +170,7 @@ const MainPage = () => {
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         value={newMessage}
                                     ></textarea>
-                                    <button className="chatSubmitButton" onClick={handleSubmit}>
+                                    <button className="chatSubmitButton" onClick={handleMessageSubmit}>
                                         Send
                                     </button>
                                 </div>
@@ -153,7 +185,7 @@ const MainPage = () => {
                 <div className="searchBar">
                     <div className="searchMenu">
                         <form onSubmit={handleSearchSubmit}>
-                            <input className="searchInput" name='searchInput' value={searchInput} onChange={(e) =>{setSearchInput(e.target.value)}} type='text' placeholder='search fro friends'/>
+                            <input className="searchInput" name='searchInput' value={searchInput} onChange={(e) => { setSearchInput(e.target.value) }} type='text' placeholder='search fro friends' />
                             <button type='submit'>submit</button>
                         </form>
                         {results.map((newFriend) => (
