@@ -1,6 +1,8 @@
+
 const { User, Conversation, Message } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
+const mongoose = require('mongoose');
 
 const resolvers = {
     Query: {
@@ -56,26 +58,29 @@ const resolvers = {
             return { token, user };
         },
         
-        addFriend: async (parent, { friendId }, context) => {
-            if (context.user) {
-                //const newFriend = await User.findOne({ _id: friendId });
+        addFriend: async (parent, { username }, context) => {            
 
+            if (context.user) {
+                //const newFriend = await User.findOne({ _id: String(friendId) });
+                const friend = await User.findOne({username: username})
                 const user = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { friends: friendId } },
-                    { new: true, runValidators: true }
+                    { $addToSet: { friends: friend._id } },
+                    { new: true }
                 );
+            
                 return user;
             }
             throw new AuthenticationError("Please login.")
         },
 
-        removeFriend: async (parent, { friendId }, context) => {
+        removeFriend: async (parent, { username }, context) => {
             if (context.user) {
+                const friend = await User.findOne({username: username});
                 const updatedUser = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $pull: { friends: friendId } },
-                    { $pull: { conversations: friendId } },
+                    { $pull: { friends: friend._id } },
+                    { $pull: { conversations: friend._Id } },
                     { new: true },
                 );
                 return updatedUser;
@@ -84,13 +89,15 @@ const resolvers = {
         },
 
         newChat: async (parent, { friendId }, context) => {
+
             if (context.user) {
-                const chat = await Conversation.create({ friendId });
-                await User.findOneAndUpdate(
+                const id = mongoose.Types.ObjectId(friendId);
+                const chat = await Conversation.create({ friendId: id });
+                /*await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $addToSet: { conversations: chat._id } },
-                    { new: true, runValidators: true },
-                )
+                    //{ new: true },
+                )*/
                 return chat;
             }
             throw new AuthenticationError('Please log in to start chat.')
@@ -110,6 +117,7 @@ const resolvers = {
                 return updatedUser;
 
             }
+            throw new AuthenticationError('Please log in to start chat.')
         },
 
         sendMessage: async (parent, { chatId, receiverId, payload }, context) => {
@@ -156,10 +164,6 @@ const resolvers = {
             }
             throw new AuthenticationError('Please log in first.')
         }
-
-
-
-
     },
 }
 

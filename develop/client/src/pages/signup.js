@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
 import { SIGN_UP } from '../utils/mutation';
-
+import { Link } from 'react-router-dom';
 
 const SignUpPage = () => {
     const [username, setUsername] = useState('');
@@ -47,6 +47,8 @@ const SignUpPage = () => {
                         </button>
                     </div>
                 </form>
+
+                <Link to='/'>Login</Link>
             </div>
         </div>
 

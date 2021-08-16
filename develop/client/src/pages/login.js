@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Auth from '../utils/auth';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutation';
+import { Link } from 'react-router-dom';
 
 
 //TO-DO Define projectID here
@@ -27,7 +28,6 @@ const Login = () => {
     } catch (err) {
         console.error(err);
     };
-
   };
 
   return (
@@ -43,6 +43,7 @@ const Login = () => {
             </button>
           </div>
         </form>
+        <Link to='/signup'> Sign Up</Link>
       </div>
     </div>
 

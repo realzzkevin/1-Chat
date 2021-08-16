@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+//const cors = require('cors');
 const { ApolloServer } = require('apollo-server-express');
 
 const db = require('./config/connection');
@@ -14,15 +15,17 @@ async function startApolloServer() {
     const server = new ApolloServer({
         typeDefs,
         resolvers,
-        context: authMiddleware
+        context: authMiddleware,
     });
+
     await server.start();
     server.applyMiddleware({ app });
 };
 
 startApolloServer();
 
-app.use(express.urlencoded({ extended: false }));
+//app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const httpServer = app.listen(PORT,() => {
@@ -37,16 +40,18 @@ const io = socketIo(httpServer);
 */
 //var express = require('express'),
 //app = express(),
-//   server = require('http').createServer(app),
+//const Server = require('http').createServer(app);
 //   io = require('socket.io').listen(server),
 
 //const httpServer = require("http").createServer(app);
 //httpServer.listen(PORT);
 
 //initial socket.io
+
 const io = require("socket.io")(httpServer, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: "http://localhost:3000",
+        //methods: ["GET", "POST"],
     },
 });
 
@@ -68,7 +73,7 @@ const getUser = (userId) => {
 
 io.on("connection", (Socket) => {
     console.log(`user ${Socket.id} connected`);
-
+    
     Socket.on("addUser", (userId) => {
         addUser(userId, Socket.id);
         io.emit("getUsers", users);
@@ -86,11 +91,12 @@ io.on("connection", (Socket) => {
         console.log(`user ${Socket.id} disconnected!`);
         removeUser(Socket.id);
         io.emit("getUsers", users);
+        
     });
 });
 
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
 }
 

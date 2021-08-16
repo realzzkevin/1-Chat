@@ -25,31 +25,18 @@ export const LOGIN_USER = gql`
 `;
 
 export const ADD_FRIEND = gql`
-    mutation addFriend( $_id: ID!) {
-        addFriend( _id: $_id) {
+    mutation addFriend( $username: String!) {
+        addFriend( username: $username) {
             _id
             username
             email
-            friends {
-                _id
-                username
-            }
-            conversation {
-                _id
-                friendId
-                updatedAt
-                message {
-                    _id
-                    updateAt
-                }
-            }
         }
     }
 `;
 
 export const DELETE_FRIEND = gql`
-    mutation removeFriend( $_id: ID!) {
-        removeFriend( _id: $_id) {
+    mutation removeFriend( $username: String!) {
+        removeFriend( username: $username) {
             _id
             username
             email
@@ -67,7 +54,7 @@ export const DELETE_FRIEND = gql`
 
 export const NEW_CHAT = gql`
     mutation newChat($friendId: ID!){
-        newChat(friendId: friendId) {
+        newChat(friendId: $friendId) {
             _id
             friendId
             updateAt
@@ -83,7 +70,7 @@ export const NEW_CHAT = gql`
 `;
 
 export const DELETE_CHAT = gql`
-    mutation deleteChat( $_id: ID!) {
+    mutation deleteChat( $_id: String!) {
         deleteChat( _id: $_id) {
             _id
             friendId
@@ -100,7 +87,7 @@ export const DELETE_CHAT = gql`
 `;
 
 export const SEND_MESSAGE = gql`
-    mutation sendMessage($_id: ID!, $receiverId:ID!, $payload: String!) {
+    mutation sendMessage($_id: String!, $receiverId: String!, $payload: String!) {
         sendMessage( _id: $_id, receiverId: $receiverId, payload: $payload) {
             _id
             senderId
@@ -112,7 +99,7 @@ export const SEND_MESSAGE = gql`
 `;
 
 export const RECEIVE_MESSAGE = gql`
-    mutation receiveMessage($_id: ID!, $senderId:ID!, $payload: String!) {
+    mutation receiveMessage($_id: String!, $senderId: String!, $payload: String!) {
         receiveMessage( _id: $_id, senderId: $senderId, payload: $payload) {
             _id
             senderId
@@ -124,7 +111,7 @@ export const RECEIVE_MESSAGE = gql`
 `;
 
 export const DELETED_MESSAGE = gql`
-    mutation deleteMessage($_id: ID!) {
+    mutation deleteMessage($_id: String!) {
         deleteMessage( _id: $_id ) {
             _id
             senderId

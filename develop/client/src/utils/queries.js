@@ -14,6 +14,25 @@ export const QUERY_ME = gql`
                 _id
                 friendId
                 updatedAt
+            }
+        }
+    }
+`;
+/*
+export const QUERY_ME = gql`
+    query me {
+        me {
+            _id
+            username
+            email
+            friends {
+                _id
+                username
+            }
+            conversations {
+                _id
+                friendId
+                updatedAt
                 message {
                     _id
                 }
@@ -21,6 +40,7 @@ export const QUERY_ME = gql`
         }
     }
 `;
+*/
 
 export const QUERY_ALLCHATS = gql`
     query allConversations {
@@ -45,7 +65,7 @@ export const QUERY_ALLCHATS = gql`
 `;
 
 export const QUERY_LOADCHAT = gql`
-    query loadConversation($_id: ID!) {
+    query loadConversation($_id: String!) {
         loadConversation( _id: $_id) {
             _id
             friendId
