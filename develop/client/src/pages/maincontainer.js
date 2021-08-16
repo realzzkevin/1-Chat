@@ -24,13 +24,14 @@ const MainPage = () => {
     const [searchInput, setSearchInput] = useState('');
     //const [friendList, setFreindList] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
+    const [currentChatId, setCurrentChatId] = useState('');
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
     
     const [submitSearch, { loading: searchLoading, data: searchData }] = useLazyQuery(QUERY_FRIENDS, { variables: { username: searchInput } });
     const results = searchData?.getFriends || [];
-    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { }} );
+    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { _id :currentChatId }} );
     const messageData = allMessages?.loadConversation.messages || [];
 
     const [addFriend] = useMutation(ADD_FRIEND);
@@ -49,6 +50,8 @@ const MainPage = () => {
             text: data.text,
             createdAt: Date.now(),
           });
+
+          console.log(data);
         });
       }, []);
 
@@ -105,9 +108,10 @@ const MainPage = () => {
 
         const chatList = userData.conversations;
         chatList.forEach(chat => {
-            if (chat.friendId.toSring() === friendId) {
+            if (chat.friendId == friendId) {
                 //continue chat
                 setCurrentChat(chat);
+                setCurrentChatId(chat._id);
                 return;
             };
         });
@@ -115,9 +119,8 @@ const MainPage = () => {
         //never chat with this friend before
         try {
             const { data } = await newChat({ variables: { friendId: friendId } });
-            console.log('new chat');
-            console.log(data);
             setCurrentChat(data.newChat);
+            setCurrentChatId(data.newChat._id)
 
         } catch (err) {
             console.log(err);
@@ -165,7 +168,6 @@ const MainPage = () => {
     } else {
         console.log(userData);
         console.log(friendList);
-        //setFreindList(userData.friends)
     };
 
     return (

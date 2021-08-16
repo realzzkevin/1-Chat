@@ -9,7 +9,7 @@ const resolvers = {
         // load user information and populate a friend list
         me: async (parent, args, context) => {
             if (context.user) {
-                return User.findOne({ _id: context.user._id }).populate('friends');
+                return User.findOne({ _id: context.user._id }).populate('friends').populate('conversations');
             }
             throw new AuthenticationError('Please login first.')
         },
@@ -93,11 +93,11 @@ const resolvers = {
             if (context.user) {
                 const id = mongoose.Types.ObjectId(friendId);
                 const chat = await Conversation.create({ friendId: id });
-                /*await User.findOneAndUpdate(
+                await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $addToSet: { conversations: chat._id } },
-                    //{ new: true },
-                )*/
+                    { new: true },
+                );
                 return chat;
             }
             throw new AuthenticationError('Please log in to start chat.')

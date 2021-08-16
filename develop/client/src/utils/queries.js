@@ -59,7 +59,7 @@ export const QUERY_ALLCHATS = gql`
                 message {
                     _id
                 }
-            }      
+            }      e
         }
     }
 `;
