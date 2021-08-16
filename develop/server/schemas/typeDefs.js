@@ -12,15 +12,15 @@ const typeDefs = gql`
 
     type Conversation {
         _id: ID
-        friendId: ID!
+        friendId: String!
         updatedAt: Int
         messages: [Message]
     }
 
     type Message {
         _id: ID
-        senderId: ID!
-        receiverId: ID!
+        senderId: String!
+        receiverId: String!
         createdAt: Int
         payload: String!
     }
@@ -33,7 +33,7 @@ const typeDefs = gql`
     type Query {
         me: User!
         allConversations: User!
-        loadConversation(_id: ID!): Conversation
+        loadConversation(_id: String!): Conversation
         getFriends(username: String!): [User]
     }
 
@@ -49,13 +49,13 @@ const typeDefs = gql`
             password: String!
         ): Auth
 
-        addFriend(_id: ID!): User
-        removeFriend(_id: ID!): User
-        newChat(friendId: ID!): Conversation
-        deleteChat(_id: ID!): Conversation
-        sendMessage( _id: ID!, receiverId: ID!, payload: String!): Message
-        receiveMessage( _id: ID!, senderId: ID!, payload: String!): Message
-        deleteMessage(_id: ID!): Message
+        addFriend(username: String!): User
+        removeFriend(username: String!): User
+        newChat(friendId: String!): Conversation
+        deleteChat(_id: String!): Conversation
+        sendMessage( _id: String!, receiverId: String!, payload: String!): Message
+        receiveMessage( _id: String!, senderId: String!, payload: String!): Message
+        deleteMessage(_id: String!): Message
     }
 `
 

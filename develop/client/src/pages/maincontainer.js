@@ -16,41 +16,40 @@ import SearchRes from '../components/seachres';
 
 const MainPage = () => {
     const { loading, data } = useQuery(QUERY_ME);
-    const userData = data?.me || {};
 
-    const [results, setResults] = useState([]);
+    const userData = data?.me || {};
+    const friendList = data?.me.friends || {};
+
+    //const [results, setResults] = useState([]);
     const [searchInput, setSearchInput] = useState('');
-    const [friendList, setFreindList] = useState([]);
+    //const [friendList, setFreindList] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
-
-    //setFreindList(data?.friends || {});
-    //const socket = useRef();
-    const socket = io("http://localhost:3000");
     
+    //setFreindList(data?.friends || {});
+    const socket = useRef();    
     //const [searchfriends] = useQuery(QUERY_FRIENDS);
     
     const [submitSearch, { loading: searchLoading, data: searchData }] = useLazyQuery(QUERY_FRIENDS, { variables: { username: searchInput } });
+    const results = searchData?.getFriends || [];
     const [addFriend] = useMutation(ADD_FRIEND);
     const [newChat] = useMutation(NEW_CHAT);
     const [sendMessage] = useMutation(SEND_MESSAGE);
     const [incomingMessage] = useMutation(RECEIVE_MESSAGE);
 
     const scrollRef = useRef();
-
-    /*useEffect(() => {
-        //socket.current = io("http://localhost:8000");
-        socket.on('getMessage', (data) => {
-            setArrivalMessage({
-                sender: data.senderId,
-                text: data.text,
-                createdAt: Date.now(),
-            });
+    useEffect(() => {
+        socket.current = io("http://localhost:3000");
+        socket.current.on("getMessage", (data) => {
+          setArrivalMessage({
+            sender: data.senderId,
+            text: data.text,
+            createdAt: Date.now(),
+          });
         });
-    }, )
-    */
+      }, []);
 
 
     const handleSearchSubmit = async (event) => {
@@ -66,11 +65,10 @@ const MainPage = () => {
         }
         try {
             submitSearch();
-            if (!searchLoading) {
-                
+            if (!searchLoading) {                
                 console.log("search results");
                 console.log(searchData);
-                setResults(searchData.getFriends);
+                //setResults(searchData.getFriends);
             }
             //const { data } = await searchfriends( { variables: {username: searchInput}});
         } catch (err) {
@@ -78,15 +76,14 @@ const MainPage = () => {
         }
     };
 
-    const handleAddFriend = async (userId) => {
-        if (!userId) {
+    const handleAddFriend = async (username) => {
+        console.log(username);
+        if (!username) {
             return false;
         }
         try {
-            const { data } = await addFriend({ variables: { _id: userId } });
-            console.log('addfriend');
-            console.log(data);
-            setFreindList(data.friends);
+            await addFriend({ variables: { username: username } });
+            //setFreindList(data.friends);
 
         } catch (err) {
             return false
@@ -128,10 +125,11 @@ const MainPage = () => {
 
     if (loading) {
         return <h2> LOADING ...</h2>
-    }/* else {
-        //console.log(userData);
+    } else {
+        console.log(userData);
+        console.log(friendList);
         //setFreindList(userData.friends)
-    };*/
+    };
 
 
     return (
@@ -187,11 +185,11 @@ const MainPage = () => {
                         <form onSubmit={handleSearchSubmit}>
                             <input className="searchInput" name='searchInput' value={searchInput} onChange={(e) => { setSearchInput(e.target.value) }} type='text' placeholder='search fro friends' />
                             <button type='submit'>submit</button>
-                        </form>
+                        </form> 
                         {results.map((newFriend) => (
-                            <div key={newFriend._id} onClick={() => handleAddFriend(newFriend._id)}>
+                            <div key={newFriend._id} onClick={() => handleAddFriend(newFriend.username)}>
                                 <p>{newFriend._id}</p>
-                                <SearchRes id={newFriend._id} name={newFriend.name} />
+                                <SearchRes id={newFriend._id} name={newFriend.username} />
                             </div>
                         ))}
                     </div>

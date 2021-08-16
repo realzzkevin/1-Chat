@@ -65,7 +65,7 @@ export const QUERY_ALLCHATS = gql`
 `;
 
 export const QUERY_LOADCHAT = gql`
-    query loadConversation($_id: ID!) {
+    query loadConversation($_id: String!) {
         loadConversation( _id: $_id) {
             _id
             friendId
