@@ -57,7 +57,7 @@ export const NEW_CHAT = gql`
         newChat(friendId: $friendId) {
             _id
             friendId
-            updateAt
+            updatedAt
             messages {
                 _id
                 senderId
