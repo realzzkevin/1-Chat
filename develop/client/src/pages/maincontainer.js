@@ -43,14 +43,14 @@ const MainPage = () => {
     const scrollRef = useRef();
 
     useEffect(() => {
-        socket.current = io("http://localhost:3000");
+        socket.current = io("ws://localhost:3000");
         socket.current.on("getMessage", (data) => {
-          setArrivalMessage({
+          /*setArrivalMessage({
             sender: data.senderId,
             text: data.text,
             createdAt: Date.now(),
-          });
-
+          });*/
+          console.log("incomming message");
           console.log(data);
         });
       }, []);
@@ -139,21 +139,23 @@ const MainPage = () => {
             receiverId: currentChat.friendId,
             payload: newMessage,           
         };
-
-        socket.current.useMutation('sendMessage', {
+        console.log(message);
+        socket.current.emit('sendMessage', {
             senderId: message.senderId,
             receiverId: message.receiverId,
             payload: message.payload,
         });
+
         // save send message into database
         try {
+            /*
             await sendMessage({
                 variables: {
                     chatId : currentChat._id,
                     receiverId: message.receiverId,
                     payload: message.payload,
                 }
-            })
+            })*/
 
             fetchMessage();
             setNewMessage('');

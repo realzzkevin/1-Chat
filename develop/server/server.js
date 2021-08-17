@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-//const cors = require('cors');
+const cors = require('cors');
 const { ApolloServer } = require('apollo-server-express');
 
 const db = require('./config/connection');
@@ -24,11 +24,11 @@ async function startApolloServer() {
 
 startApolloServer();
 
-//app.use(cors());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const httpServer = app.listen(PORT,() => {
+const httpServer = app.listen(PORT, () => {
     console.log(`API server running on port ${PORT}!`);
     console.log(`socke.io running on port ${PORT}`);
 });
@@ -58,22 +58,32 @@ const io = require("socket.io")(httpServer, {
 let users = [];
 
 const addUser = (userId, socketId) => {
-    if (!users.some((user) => user.userId === userId)) {
+    /*users.forEach(user => {
+        if (user.userId === userId){
+            return;
+        }
+    });
+    users.push({ userId, socketId });*/
+    !users.some((user) => user.userId === userId) &&
         users.push({ userId, socketId });
-    }
-}
-
+};
 const removeUser = (socketId) => {
     users = users.filter((user) => user.socketId !== socketId);
 };
 
 const getUser = (userId) => {
+    /*users.forEach(user => {
+        if (user.userId === userId) {
+            return user;
+        }
+        return;
+    });*/
     return users.find((user) => user.userId === userId);
 };
 
 io.on("connection", (Socket) => {
     console.log(`user ${Socket.id} connected`);
-    
+
     Socket.on("addUser", (userId) => {
         addUser(userId, Socket.id);
         io.emit("getUsers", users);
@@ -81,17 +91,25 @@ io.on("connection", (Socket) => {
 
     Socket.on("sendMessage", ({ senderId, receiverId, payload }) => {
         const user = getUser(receiverId);
-        io.to(user.SocketId).emit("getMessage", {
+        console.log(user);
+        /*
+        io.to(user.socketId).emit("getMessage", {
+            senderId,
+            payload,
+        });*/
+        io.emit("getMessage", {
             senderId,
             payload,
         });
+        //console.log(user.socketId);
+        console.log(`sender: ${senderId} receiver: ${receiverId} payload: ${payload}`);
     });
 
     Socket.on("disconnect", () => {
         console.log(`user ${Socket.id} disconnected!`);
         removeUser(Socket.id);
         io.emit("getUsers", users);
-        
+
     });
 });
 
