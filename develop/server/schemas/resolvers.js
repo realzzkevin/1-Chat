@@ -89,9 +89,9 @@ const resolvers = {
         },
 
         newChat: async (parent, { friendId }, context) => {
-
             if (context.user) {
                 const id = mongoose.Types.ObjectId(friendId);
+                console.log(id)
                 const chat = await Conversation.create({ friendId: id });
                 await User.findOneAndUpdate(
                     { _id: context.user._id },

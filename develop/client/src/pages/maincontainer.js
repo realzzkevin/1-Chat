@@ -118,6 +118,7 @@ const MainPage = () => {
 
         //never chat with this friend before
         try {
+          
             const { data } = await newChat({ variables: { friendId: friendId } });
             setCurrentChat(data.newChat);
             setCurrentChatId(data.newChat._id)
