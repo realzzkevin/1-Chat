@@ -24,13 +24,14 @@ const MainPage = () => {
     const [searchInput, setSearchInput] = useState('');
     //const [friendList, setFreindList] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
+    const [currentChatId, setCurrentChatId] = useState('');
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
     
     const [submitSearch, { loading: searchLoading, data: searchData }] = useLazyQuery(QUERY_FRIENDS, { variables: { username: searchInput } });
     const results = searchData?.getFriends || [];
-    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { }} );
+    const [fetchMessage, {loading: messageLoading, data: allMessages}] = useLazyQuery(QUERY_LOADCHAT, { variables: { _id :currentChatId }} );
     const messageData = allMessages?.loadConversation.messages || [];
 
     const [addFriend] = useMutation(ADD_FRIEND);
@@ -42,13 +43,15 @@ const MainPage = () => {
     const scrollRef = useRef();
 
     useEffect(() => {
-        socket.current = io("http://localhost:3000");
+        socket.current = io("ws://localhost:3000");
         socket.current.on("getMessage", (data) => {
-          setArrivalMessage({
+          /*setArrivalMessage({
             sender: data.senderId,
             text: data.text,
             createdAt: Date.now(),
-          });
+          });*/
+          console.log("incomming message");
+          console.log(data);
         });
       }, []);
 
@@ -105,19 +108,20 @@ const MainPage = () => {
 
         const chatList = userData.conversations;
         chatList.forEach(chat => {
-            if (chat.friendId.toSring() === friendId) {
+            if (chat.friendId == friendId) {
                 //continue chat
                 setCurrentChat(chat);
+                setCurrentChatId(chat._id);
                 return;
             };
         });
 
         //never chat with this friend before
         try {
-            const  Data  = await newChat({ variables: { friendId: friendId } });
-            console.log('new chat');
-            console.log(Data);
-            setCurrentChat(Data.newChat);
+          
+            const { data } = await newChat({ variables: { friendId: friendId } });
+            setCurrentChat(data.newChat);
+            setCurrentChatId(data.newChat._id)
 
         } catch (err) {
             console.log(err);
@@ -136,21 +140,23 @@ const MainPage = () => {
             receiverId: currentChat.friendId,
             payload: newMessage,           
         };
-
-        socket.current.useMutation('sendMessage', {
+        console.log(message);
+        socket.current.emit('sendMessage', {
             senderId: message.senderId,
             receiverId: message.receiverId,
             payload: message.payload,
         });
+
         // save send message into database
         try {
+            /*
             await sendMessage({
                 variables: {
                     chatId : currentChat._id,
                     receiverId: message.receiverId,
                     payload: message.payload,
                 }
-            })
+            })*/
 
             fetchMessage();
             setNewMessage('');
@@ -165,7 +171,6 @@ const MainPage = () => {
     } else {
         console.log(userData);
         console.log(friendList);
-        //setFreindList(userData.friends)
     };
 
     return (

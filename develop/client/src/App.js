@@ -48,7 +48,9 @@ const App = () => {
           <Route exact path='/signup'>
           { isLogin ? <MainPage /> : <SignUpPage/>}
           </Route>
-          <Route render = { () => <h1>Please login or signup</h1>} />
+          <Route path='*'>
+          { isLogin ? <MainPage /> : <SignUpPage/>}
+          </Route>
         </Switch>
       </Router>
     </ApolloProvider>
